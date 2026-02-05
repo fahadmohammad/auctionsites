@@ -11,10 +11,10 @@ namespace SearchService_Controllers.Controllers
     public class SearchController : ControllerBase
     {
         private readonly DB _db;
-        public SearchController()
+
+        public SearchController(DB db)
         {
-            var builder = WebApplication.CreateBuilder();
-            _db = DbInitializers.InitDb(builder.Build()).Result;
+            _db = db;
         }
 
         [HttpGet]

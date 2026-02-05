@@ -8,12 +8,13 @@ namespace SearchService_Controllers.Data
 {
     public class DbInitializers
     {
-        public static async Task<DB> InitDb(WebApplication app)
+        public static async Task SeedDatabase(WebApplication app)
         {
-            var db = await DB.InitAsync("SearchDb",
-                MongoClientSettings.FromConnectionString(
-                    app.Configuration.GetConnectionString("MongoDbConnection")));
-                    
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<DB>();
+            var httpClient = scope.ServiceProvider.GetRequiredService<AuctionServiceHttpClient>();
+
+            // Create indexes
             await db.Index<Item>()
                 .Key(x => x.Make, KeyType.Text)
                 .Key(x => x.Model, KeyType.Text)
@@ -21,9 +22,6 @@ namespace SearchService_Controllers.Data
                 .CreateAsync();
 
             var count = await db.CountAsync<Item>();
-            
-            using var scope =  app.Services.CreateScope();
-            var httpClient = scope.ServiceProvider.GetRequiredService<AuctionServiceHttpClient>();
 
             var lastUpdated = await db.Find<Item, string>()
                 .Sort(x => x.Descending(i => i.UpdatedAt))
@@ -31,15 +29,13 @@ namespace SearchService_Controllers.Data
                 .ExecuteFirstAsync();
 
             var items = await httpClient.GetItemsforSearchDb(lastUpdated);
-            
+
             System.Console.WriteLine($"{items.Count} items fetched from Auction Service.");
 
-            if(items.Count > 0)
+            if (items.Count > 0)
             {
                 await db.SaveAsync(items);
             }
-
-            return db;
         }
     }
 }

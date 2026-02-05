@@ -1,7 +1,9 @@
+using MassTransit;
 using MongoDB.Driver;
 using MongoDB.Entities;
 using Polly;
 using Polly.Extensions.Http;
+using SearchService_Controllers.Consumers;
 using SearchService_Controllers.Data;
 using SearchService_Controllers.Models;
 using SearchService_Controllers.Services;
@@ -12,9 +14,35 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Register MongoDB DB as a singleton
+builder.Services.AddSingleton<DB>(sp =>
+{
+    var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDbConnection");
+    var mongoClientSettings = MongoClientSettings.FromConnectionString(mongoConnectionString);
+    var db = DB.InitAsync("SearchDb", mongoClientSettings).Result;
+    return db;
+});
 
 builder.Services.AddHttpClient<AuctionServiceHttpClient>()
     .AddPolicyHandler(GePolicy());
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("searcch", false));
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.ReceiveEndpoint("search-auction-created", e =>
+        {
+            e.UseMessageRetry(r => r.Interval(5, TimeSpan.FromSeconds(5)));
+            e.ConfigureConsumer<AuctionCreatedConsumer>(context);
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 
@@ -46,7 +74,7 @@ app.Lifetime.ApplicationStarted.Register(async () =>
 {
     try
     {
-        await DbInitializers.InitDb(app);
+        //await DbInitializers.SeedDatabase(app);
     }
     catch (Exception ex)
     {
