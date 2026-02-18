@@ -21,14 +21,14 @@ try
 
     SeedData.EnsureSeedData(app);
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.Lifetime.ApplicationStopping.Register(() =>
-        {
-            var usage = app.Services.GetRequiredService<LicenseUsageSummary>();
-            Console.Write(Summary(usage));
-        });
-    }
+    // if (app.Environment.IsDevelopment())
+    // {
+    //     app.Lifetime.ApplicationStopping.Register(() =>
+    //     {
+    //         var usage = app.Services.GetRequiredService<LicenseUsageSummary>();
+    //         Console.Write(Summary(usage));
+    //     });
+    // }
 
     app.Run();
 }
