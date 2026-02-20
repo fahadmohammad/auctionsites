@@ -20,9 +20,13 @@ namespace SearchService_Controllers.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Item>>> SearchItems([FromQuery] RequestParams searchParams)
         {
+            _db.Collection<Item>().EnsureIndex(i => i.Make);
+            _db.Collection<Item>().EnsureIndex(i => i.Model);
+
             var searchTerm = searchParams.SearchTerm;
             var pageSize = searchParams.PageSize;
             var pageNumber = searchParams.PageNumber;
+
             {
                 var query = _db.PagedSearch<Item, Item>();
 
