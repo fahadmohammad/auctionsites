@@ -20,9 +20,6 @@ namespace SearchService_Controllers.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Item>>> SearchItems([FromQuery] RequestParams searchParams)
         {
-            _db.Collection<Item>().EnsureIndex(i => i.Make);
-            _db.Collection<Item>().EnsureIndex(i => i.Model);
-
             var searchTerm = searchParams.SearchTerm;
             var pageSize = searchParams.PageSize;
             var pageNumber = searchParams.PageNumber;
@@ -38,7 +35,8 @@ namespace SearchService_Controllers.Controllers
 
                 query = searchParams.OrderBy switch
                 {
-                    "make" => query.Sort(x => x.Ascending(i => i.Make)),
+                    "make" => query.Sort(x => x.Ascending(i => i.Make))
+                        .Sort(x => x.Ascending(i => i.Model)),
                     "new" => query.Sort(x => x.Descending(i => i.CreatedAt)),
                     _ => query.Sort(x => x.Ascending(i => i.AuctionEnd))
                 };
