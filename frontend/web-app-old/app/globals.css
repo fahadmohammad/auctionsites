@@ -5,7 +5,3 @@
 [role="button"], button {
     cursor: pointer;
 }
-
-.react-datepicker-wrapper {
-    width: 100%;
-}
