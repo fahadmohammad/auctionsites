@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -9,6 +9,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{A234FC94-AA51-A558-AC74-0D69EA0D971A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchService-Controllers", "SearchService-Controllers\SearchService-Controllers.csproj", "{F1D0E98B-19D1-C13A-5CB0-34D117E0D3CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiddingService", "BiddingService\BiddingService.csproj", "{11203A3A-29A9-445A-9B4F-DE9634F5C912}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{F1D0E98B-19D1-C13A-5CB0-34D117E0D3CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1D0E98B-19D1-C13A-5CB0-34D117E0D3CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1D0E98B-19D1-C13A-5CB0-34D117E0D3CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11203A3A-29A9-445A-9B4F-DE9634F5C912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11203A3A-29A9-445A-9B4F-DE9634F5C912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11203A3A-29A9-445A-9B4F-DE9634F5C912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11203A3A-29A9-445A-9B4F-DE9634F5C912}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
